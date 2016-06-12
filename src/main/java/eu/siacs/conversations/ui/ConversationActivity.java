@@ -34,6 +34,7 @@ import android.widget.CheckBox;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
+import android.preference.PreferenceManager;
 
 import net.java.otr4j.session.SessionStatus;
 
@@ -170,6 +171,9 @@ public class ConversationActivity extends XmppActivity
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
+		
 		if (savedInstanceState != null) {
 			mOpenConverstaion = savedInstanceState.getString(STATE_OPEN_CONVERSATION, null);
 			mPanelOpen = savedInstanceState.getBoolean(STATE_PANEL_OPEN, true);

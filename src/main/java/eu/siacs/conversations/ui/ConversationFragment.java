@@ -381,6 +381,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
 	public void updateChatMsgHint() {
 		final boolean multi = conversation.getMode() == Conversation.MODE_MULTI;
+		mEditMessage.setEnabled(true);
+		
 		if (conversation.getCorrectingMessage() != null) {
 			this.mEditMessage.setHint(R.string.send_corrected_message);
 		} else if (multi && conversation.getNextCounterpart() != null) {
@@ -392,11 +394,15 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		} else {
 			switch (conversation.getNextEncryption()) {
 				case Message.ENCRYPTION_NONE:
+					/*
 					if (Config.multipleEncryptionChoices()) {
 						mEditMessage.setHint(getString(R.string.send_unencrypted_message));
 					} else {
 						mEditMessage.setHint(getString(R.string.send_message_to_x,conversation.getName()));
 					}
+					*/
+					mEditMessage.setEnabled(false);
+					mEditMessage.setHint("Waiting for encryption...");
 					break;
 				case Message.ENCRYPTION_OTR:
 					mEditMessage.setHint(getString(R.string.send_otr_message));

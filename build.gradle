@@ -74,22 +74,16 @@ android {
 		playstore
 		free
 	}
-	if (project.hasProperty('mStoreFile') &&
-			project.hasProperty('mStorePassword') &&
-			project.hasProperty('mKeyAlias') &&
-			project.hasProperty('mKeyPassword')) {
-		signingConfigs {
-			release {
-				storeFile file(mStoreFile)
-					storePassword mStorePassword
-					keyAlias mKeyAlias
-					keyPassword mKeyPassword
-			}
+	
+	signingConfigs {
+		release {
+			storeFile file(KEYSTORE)
+				storePassword KEYSTORE_PASSWORD
+				keyAlias KEY_ALIAS
+				keyPassword KEY_PASSWORD
 		}
-		buildTypes.release.signingConfig = signingConfigs.release
-	} else {
-		buildTypes.release.signingConfig = null
 	}
+	buildTypes.release.signingConfig = signingConfigs.release
 
 	lintOptions {
 		disable 'ExtraTranslation', 'MissingTranslation', 'InvalidPackage', 'MissingQuantity', 'AppCompatResource'
