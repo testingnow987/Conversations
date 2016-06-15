@@ -296,16 +296,22 @@ public class MucOptions {
 
 		@Override
 		public int compareTo(User another) {
-			Contact ourContact = getContact();
-			Contact anotherContact = another.getContact();
-			if (ourContact != null && anotherContact != null) {
-				return ourContact.compareTo(anotherContact);
-			} else if (ourContact == null && anotherContact != null) {
-				return getName().compareToIgnoreCase(anotherContact.getDisplayName());
-			} else if (ourContact != null) {
-				return ourContact.getDisplayName().compareToIgnoreCase(another.getName());
+			if (another.getAffiliation().outranks(getAffiliation())) {
+				return 1;
+			} else if (getAffiliation().outranks(another.getAffiliation())) {
+				return -1;
 			} else {
-				return getName().compareToIgnoreCase(another.getName());
+				Contact ourContact = getContact();
+				Contact anotherContact = another.getContact();
+				if (ourContact != null && anotherContact != null) {
+					return ourContact.compareTo(anotherContact);
+				} else if (ourContact == null && anotherContact != null) {
+					return getName().compareToIgnoreCase(anotherContact.getDisplayName());
+				} else if (ourContact != null) {
+					return ourContact.getDisplayName().compareToIgnoreCase(another.getName());
+				} else {
+					return getName().compareToIgnoreCase(another.getName());
+				}
 			}
 		}
 
@@ -443,7 +449,7 @@ public class MucOptions {
 		return null;
 	}
 
-	public User findUserByRealJid(Jid jid) {
+	private User findUserByRealJid(Jid jid) {
 		if (jid == null) {
 			return null;
 		}
@@ -455,6 +461,10 @@ public class MucOptions {
 			}
 		}
 		return null;
+	}
+
+	public boolean isContactInRoom(Contact contact) {
+		return findUserByRealJid(contact.getJid().toBareJid()) != null;
 	}
 
 	public boolean isUserInRoom(Jid jid) {
