@@ -701,7 +701,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		message.setEncryption(Message.ENCRYPTION_PGP);
 		activity.updateConversationList();
 		updateMessages();
-		conversation.getAccount().getPgpDecryptionService().decrypt(message);
+		conversation.getAccount().getPgpDecryptionService().decrypt(message, false);
 	}
 
 	protected void privateMessageWith(final Jid counterpart) {
@@ -922,7 +922,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		}
 	}
 
-	private void messageSent() {
+	protected void messageSent() {
 		mEditMessage.setText("");
 		updateChatMsgHint();
 		new Handler().post(new Runnable() {
@@ -1178,7 +1178,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
 							@Override
 							public void success(Contact contact) {
-								messageSent();
 								activity.encryptTextMessage(message);
 							}
 
@@ -1216,7 +1215,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 					warning.show();
 				}
 				activity.encryptTextMessage(message);
-				messageSent();
 			} else {
 				showNoPGPKeyDialog(true,
 						new DialogInterface.OnClickListener() {
