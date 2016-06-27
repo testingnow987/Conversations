@@ -455,7 +455,14 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 						}
 					} else {
 						if (!message.getContact().isSelf()) {
-							activity.switchToContactDetails(message.getContact(), message.getFingerprint());
+							String fingerprint;
+							if (message.getEncryption() == Message.ENCRYPTION_PGP
+									|| message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
+								fingerprint = "pgp";
+							} else {
+								fingerprint = message.getFingerprint();
+							}
+							activity.switchToContactDetails(message.getContact(), fingerprint);
 						}
 					}
 				} else {
@@ -467,7 +474,14 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 					} else {
 						intent = new Intent(activity, EditAccountActivity.class);
 						intent.putExtra("jid", account.getJid().toBareJid().toString());
-						intent.putExtra("fingerprint", message.getFingerprint());
+						String fingerprint;
+						if (message.getEncryption() == Message.ENCRYPTION_PGP
+								|| message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
+							fingerprint = "pgp";
+						} else {
+							fingerprint = message.getFingerprint();
+						}
+						intent.putExtra("fingerprint", fingerprint);
 					}
 					startActivity(intent);
 				}
@@ -1183,7 +1197,15 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
 							@Override
 							public void error(int error, Contact contact) {
-								System.out.println();
+								activity.runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										Toast.makeText(activity,
+												R.string.unable_to_connect_to_keychain,
+												Toast.LENGTH_SHORT
+										).show();
+									}
+								});
 							}
 						});
 
